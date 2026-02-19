@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Earn Bot Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { padding: 8px; width: 280px; }
+    button { padding: 8px 12px; margin-left: 6px; cursor: pointer; }
+    pre { background: #111; color: #0f0; padding: 12px; margin-top: 14px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h2>Earn Bot Admin</h2>
+
+  <p>Enter Admin Password:</p>
+  <input type="password" id="pass" placeholder="ADMIN_PASSWORD" />
+  <button onclick="loadAdmin()">Load</button>
+
+  <pre id="out">Waiting...</pre>
+
+  <script>
+    async function loadAdmin() {
+      const password = document.getElementById("pass").value.trim();
+      const out = document.getElementById("out");
+
+      if (!password) {
+        out.textContent = "❌ Please enter admin password.";
+        return;
+      }
+
+      out.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/api/admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password })
+        });
+
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = "❌ Error: " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
